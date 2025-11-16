@@ -1,8 +1,23 @@
-import java.io.*;
+ import java.io.*;
 import java.util.*;
 
 public class EmployeeManager {
     public static void main(String[] args) {
+
+        // ===== Task #2: Argument Count Check =====
+        if (args.length != 1) {
+            System.out.println("Error: Incorrect number of arguments!");
+            System.out.println("Usage:");
+            System.out.println("   l          -> list employees");
+            System.out.println("   s          -> show random employee");
+            System.out.println("   +name      -> add employee");
+            System.out.println("   ?name      -> search employee");
+            System.out.println("   c          -> count words");
+            System.out.println("   uname      -> update employee");
+            System.out.println("   dname      -> delete employee");
+            return; // terminate early
+        }
+        // ========================================
 
         // Check arguments
         if (args[0].equals("l")) {
@@ -17,7 +32,6 @@ public class EmployeeManager {
                 for (String emp : employees) {
                     System.out.println(emp);
                 }
-
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
@@ -33,10 +47,7 @@ public class EmployeeManager {
 
                 String[] employees = line.split(",");
                 Random rand = new Random();
-                int idx = rand.nextInt(employees.length);
-
-                System.out.println(employees[idx]);
-
+                System.out.println(employees[rand.nextInt(employees.length)]);
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
@@ -44,13 +55,11 @@ public class EmployeeManager {
         } else if (args[0].contains("+")) {
             System.out.println("Loading data ...");
             try {
+                String name = args[0].substring(1);
                 BufferedWriter w = new BufferedWriter(
                         new FileWriter("employees.txt", true));
-
-                String name = args[0].substring(1);
                 w.write(", " + name);
                 w.close();
-
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
@@ -63,17 +72,16 @@ public class EmployeeManager {
                                 new FileInputStream("employees.txt")));
                 String line = r.readLine();
                 String[] employees = line.split(",");
-
-                boolean found = false;
                 String search = args[0].substring(1);
 
-                for (int i = 0; i < employees.length && !found; i++) {
-                    if (employees[i].equals(search)) {
+                boolean found = false;
+                for (String emp : employees) {
+                    if (emp.equals(search)) {
                         System.out.println("Employee found!");
                         found = true;
+                        break;
                     }
                 }
-
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
@@ -100,9 +108,7 @@ public class EmployeeManager {
                         }
                     }
                 }
-
                 System.out.println(count + " word(s) found " + chars.length);
-
             } catch (Exception e) {
             }
             System.out.println("Data Loaded.");
@@ -117,7 +123,6 @@ public class EmployeeManager {
                 String[] employees = line.split(",");
 
                 String name = args[0].substring(1);
-
                 for (int i = 0; i < employees.length; i++) {
                     if (employees[i].equals(name)) {
                         employees[i] = "Updated";
@@ -128,7 +133,6 @@ public class EmployeeManager {
                         new FileWriter("employees.txt"));
                 w.write(String.join(",", employees));
                 w.close();
-
             } catch (Exception e) {
             }
             System.out.println("Data Updated.");
@@ -150,7 +154,6 @@ public class EmployeeManager {
                         new FileWriter("employees.txt"));
                 w.write(String.join(",", list));
                 w.close();
-
             } catch (Exception e) {
             }
             System.out.println("Data Deleted.");
